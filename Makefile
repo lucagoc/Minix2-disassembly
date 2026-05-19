@@ -1,10 +1,10 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -O2
+CC = ocamlopt
+CFLAGS = 
 
 all: disassembly
 
-disassembly: src/main.c
-	$(CC) $(CFLAGS) -o disassembly src/main.c
+disassembly: src/main.ml
+	$(CC) $(CFLAGS) -o disassembly src/main.ml
 
 test: disassembly
 	@echo "Running tests..."
