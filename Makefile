@@ -37,4 +37,4 @@ test: disassembly
 	fi
 
 clean:
-	rm -f disassembly a.out expected.txt actual.txt
+	rm -f disassembly a.out expected.txt actual.txt src/*.cmi src/*.cmo src/*.cmx src/*.o
