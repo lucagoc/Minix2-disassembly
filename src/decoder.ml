@@ -46,7 +46,7 @@ let decode_rm text pc text_size mod_val rm w =
     if mod_val = 1 then
       if pc >= text_size then (0, "")
       else
-        let disp = Bytes.get_uint8 text pc |> sign_extend_byte in
+        let disp = sign_extend_byte (Bytes.get_uint8 text pc) in
         let s =
           if disp < 0 then sprintf "[%s-%x]" inner (-disp)
           else if disp > 0 then sprintf "[%s+%x]" inner disp
@@ -98,7 +98,7 @@ let decode_alu_mov_test op text pc text_size bytes_read prefix =
 
 let decode_jcc op text pc text_size bytes_read prefix start_pc =
   if pc < text_size then
-    let disp = Bytes.get_uint8 text pc |> sign_extend_byte in
+    let disp = sign_extend_byte (Bytes.get_uint8 text pc) in
     let addr = (start_pc + 2 + disp) land 0xFFFF in
     let m = sprintf "%s%s %04x" prefix jcc_ops.(op land 15) addr in
     (m, pc + 1, bytes_read + 1)
@@ -119,7 +119,7 @@ let decode_grp1 op text pc text_size bytes_read prefix =
       let imm = Bytes.get_uint16_le text pc in
       (sprintf "%s%s %s, %04x" prefix alu_ops.(reg) rm_buf imm, pc + 2, bytes_read + 2)
     else if op = 0x83 && pc < text_size then
-      let imm = Bytes.get_uint8 text pc |> sign_extend_byte in
+      let imm = sign_extend_byte (Bytes.get_uint8 text pc) in
       let m = if imm < 0 then sprintf "%s%s %s, -%x" prefix alu_ops.(reg) rm_buf (-imm)
               else sprintf "%s%s %s, %x" prefix alu_ops.(reg) rm_buf imm in
       (m, pc + 1, bytes_read + 1)
@@ -257,7 +257,7 @@ let decode_single_byte op text pc text_size bytes_read prefix start_pc =
       else ("???", pc, bytes_read)
   | 0xE2 ->
       if pc < text_size then
-        let disp = Bytes.get_uint8 text pc |> sign_extend_byte in
+        let disp = sign_extend_byte (Bytes.get_uint8 text pc) in
         let addr = (start_pc + 2 + disp) land 0xFFFF in
         (sprintf "%sloop %04x" prefix addr, pc + 1, bytes_read + 1)
       else ("???", pc, bytes_read)
@@ -280,7 +280,7 @@ let decode_single_byte op text pc text_size bytes_read prefix start_pc =
       else ("???", pc, bytes_read)
   | 0xEB ->
       if pc < text_size then
-        let disp = Bytes.get_uint8 text pc |> sign_extend_byte in
+        let disp = sign_extend_byte (Bytes.get_uint8 text pc) in
         let addr = (start_pc + 2 + disp) land 0xFFFF in
         (sprintf "%sjmp short %04x" prefix addr, pc + 1, bytes_read + 1)
       else ("???", pc, bytes_read)
