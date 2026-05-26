@@ -1,10 +1,10 @@
 CC = ocamlopt
-CFLAGS = 
+CFLAGS = -I src
 
 all: disassembly
 
-disassembly: src/main.ml
-	$(CC) $(CFLAGS) -o disassembly src/main.ml
+disassembly: src/decoder.ml src/main.ml
+	$(CC) $(CFLAGS) -o disassembly src/decoder.ml src/main.ml
 
 test: disassembly
 	@echo "Running tests..."

@@ -1,3 +1,4 @@
-src/main.cmi
-src/main.cmx
-src/main.o
+*.cmi
+*.cmx
+*.o
+disassembly
